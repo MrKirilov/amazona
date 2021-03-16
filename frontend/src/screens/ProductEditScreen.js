@@ -9,17 +9,17 @@ export default function ProductEditScreen(props) {
   const [name, setName] = useState('');
   const [price, setPrice] = useState('');
   const [image, setImage] = useState('');
-  const [category, setCategory] = useState();
+  const [category, setCategory] = useState('');
   const [countInStock, setCountInStock] = useState('');
   const [brand, setBrand] = useState('');
   const [description, setDescription] = useState('');
 
   const productDetails = useSelector((state) => state.productDetails);
   const { loading, error, product } = productDetails;
-
   const dispatch = useDispatch();
+
   useEffect(() => {
-    if (!product.name || product._id !== productId) {
+    if (!product || product._id !== productId) {
       dispatch(detailsProduct(productId));
     } else {
       setName(product.name);
@@ -34,7 +34,7 @@ export default function ProductEditScreen(props) {
 
   const submitHandler = (e) => {
     e.preventDefault();
-    // TODO: dispatch update product
+    //todo dispatch update product
   };
 
   return (
@@ -54,7 +54,7 @@ export default function ProductEditScreen(props) {
               <input
                 type='text'
                 id='name'
-                placeholder='Enter name'
+                placeholder=' Enter name'
                 value={name}
                 onChange={(e) => setName(e.target.value)}
               />
@@ -94,37 +94,38 @@ export default function ProductEditScreen(props) {
               <input
                 type='text'
                 id='brand'
-                placeholder='Enter brand'
+                placeholder=' Enter brand'
                 value={brand}
                 onChange={(e) => setBrand(e.target.value)}
               />
             </div>
             <div>
-              <label htmlFor='countInStock'>Count in Stock</label>
+              <label htmlFor='countInStock'>Count In Stock</label>
               <input
                 type='text'
                 id='countInStock'
-                placeholder='Enter count in Stock'
+                placeholder=' Enter count in stock'
                 value={countInStock}
                 onChange={(e) => setCountInStock(e.target.value)}
               />
             </div>
             <div>
               <label htmlFor='description'>Description</label>
-              <input
-                type='textarea'
+              <textarea
+                type='text'
                 rows='3'
                 id='description'
-                placeholder='Enter description'
+                placeholder=' Enter description'
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
               />
             </div>
             <div>
-              <label />
-              <button className='primary' type='submit'>
-                Update
-              </button>
+              <label>
+                <button className='primary' type='submit'>
+                  Update
+                </button>
+              </label>
             </div>
           </>
         )}
