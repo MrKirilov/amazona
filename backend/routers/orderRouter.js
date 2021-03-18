@@ -102,19 +102,12 @@ orderRouter.delete(
 orderRouter.put(
   '/:id/deliver',
   isAuth,
-<<<<<<< HEAD
   isAdmin,
-=======
->>>>>>> fbee903c8932ffa6a1fc5ab189ebddac100d8759
   expressAsyncHandler(async (req, res) => {
     const order = await Order.findById(req.params.id);
     if (order) {
       order.isDelivered = true;
       order.deliveredAt = Date.now();
-<<<<<<< HEAD
-
-=======
->>>>>>> fbee903c8932ffa6a1fc5ab189ebddac100d8759
       const updatedOrder = await order.save();
       res.send({ message: 'Order Delivered', order: updatedOrder });
     } else {
