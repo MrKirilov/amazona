@@ -30,7 +30,8 @@ export default function OrderScreen(props) {
     loading: loadingDeliver,
     error: errorDeliver,
     success: successDeliver,
-  } = orderDeliver;
+  } = orderPay;
+
   const dispatch = useDispatch();
   useEffect(() => {
     const addPayPalScript = async () => {
@@ -62,11 +63,15 @@ export default function OrderScreen(props) {
         }
       }
     }
-  }, [dispatch, order, orderId, sdkReady, successPay, successDeliver]);
+  }, [dispatch, order, orderId, setSdkReady, successPay, successDeliver]);
 
   const successPaymentHandler = (paymentResult) => {
     dispatch(payOrder(order, paymentResult));
   };
+  const deliverHandler = () => {
+    dispatch(deliverOrder(order._id));
+  };
+
   const deliverHandler = () => {
     dispatch(deliverOrder(order._id));
   };

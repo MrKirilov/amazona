@@ -14,6 +14,7 @@ import {
   ORDER_MINE_LIST_FAIL,
   ORDER_MINE_LIST_SUCCESS,
   ORDER_LIST_REQUEST,
+<<<<<<< HEAD
   ORDER_LIST_SUCCESS,
   ORDER_LIST_FAIL,
   ORDER_DELETE_REQUEST,
@@ -22,6 +23,16 @@ import {
   ORDER_DELIVER_REQUEST,
   ORDER_DELIVER_SUCCESS,
   ORDER_DELIVER_FAIL,
+=======
+  ORDER_LIST_FAIL,
+  ORDER_LIST_SUCCESS,
+  ORDER_DELETE_REQUEST,
+  ORDER_DELETE_FAIL,
+  ORDER_DELETE_SUCCESS,
+  ORDER_DELIVER_REQUEST,
+  ORDER_DELIVER_FAIL,
+  ORDER_DELIVER_SUCCESS,
+>>>>>>> fbee903c8932ffa6a1fc5ab189ebddac100d8759
 } from '../constants/orderConstants';
 
 export const createOrder = (order) => async (dispatch, getState) => {
@@ -119,11 +130,18 @@ export const listOrders = () => async (dispatch, getState) => {
   const {
     userSignin: { userInfo },
   } = getState();
+<<<<<<< HEAD
   try {
     const { data } = await Axios.get(`/api/orders`, {
       headers: {
         Authorization: `Bearer ${userInfo.token}`,
       },
+=======
+
+  try {
+    const { data } = await Axios.get('api/orders', {
+      headers: { Authorization: `Bearer ${userInfo.token}` },
+>>>>>>> fbee903c8932ffa6a1fc5ab189ebddac100d8759
     });
     dispatch({ type: ORDER_LIST_SUCCESS, payload: data });
   } catch (error) {
@@ -140,11 +158,18 @@ export const deleteOrder = (orderId) => async (dispatch, getState) => {
   const {
     userSignin: { userInfo },
   } = getState();
+<<<<<<< HEAD
   try {
     const { data } = await Axios.delete(`/api/orders/${orderId}`, {
       headers: {
         Authorization: `Bearer ${userInfo.token}`,
       },
+=======
+
+  try {
+    const { data } = await Axios.delete(`/api/orders/${orderId}`, {
+      headers: { Authorization: `Bearer ${userInfo.token}` },
+>>>>>>> fbee903c8932ffa6a1fc5ab189ebddac100d8759
     });
     dispatch({ type: ORDER_DELETE_SUCCESS, payload: data });
   } catch (error) {
