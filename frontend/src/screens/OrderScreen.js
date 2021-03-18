@@ -3,17 +3,21 @@ import { PayPalButton } from 'react-paypal-button-v2';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { detailsOrder, payOrder } from '../actions/orderActions';
+import { deliverOrder, detailsOrder, payOrder } from '../actions/orderActions';
 import LoadingBox from '../components/LoadingBox';
 import MessageBox from '../components/MessageBox';
-import { ORDER_PAYMENT_RESET } from '../constants/orderConstants';
+import {
+  ORDER_DELIVER_RESET,
+  ORDER_PAYMENT_RESET,
+} from '../constants/orderConstants';
 
 export default function OrderScreen(props) {
   const orderId = props.match.params.id;
   const [sdkReady, setSdkReady] = useState(false);
-
   const orderDetails = useSelector((state) => state.orderDetails);
   const { order, loading, error } = orderDetails;
+  const userSignin = useSelector((state) => state.userSignin);
+  const { userInfo } = userSignin;
 
   const orderPay = useSelector((state) => state.orderPay);
   const {
@@ -21,38 +25,54 @@ export default function OrderScreen(props) {
     error: errorPay,
     success: successPay,
   } = orderPay;
-
+  const orderDeliver = useSelector((state) => state.orderDeliver);
+  const {
+    loading: loadingDeliver,
+    error: errorDeliver,
+    success: successDeliver,
+  } = orderDeliver;
   const dispatch = useDispatch();
   useEffect(() => {
-    const addPaypalScript = async () => {
+    const addPayPalScript = async () => {
       const { data } = await Axios.get('/api/config/paypal');
       const script = document.createElement('script');
       script.type = 'text/javascript';
       script.src = `https://www.paypal.com/sdk/js?client-id=${data}`;
-      script.async = 'true';
-      script.onload = () => setSdkReady(true);
+      script.async = true;
+      script.onload = () => {
+        setSdkReady(true);
+      };
       document.body.appendChild(script);
     };
-    if (!order || successPay || (order && order._id !== orderId)) {
+    if (
+      !order ||
+      successPay ||
+      successDeliver ||
+      (order && order._id !== orderId)
+    ) {
       dispatch({ type: ORDER_PAYMENT_RESET });
+      dispatch({ type: ORDER_DELIVER_RESET });
       dispatch(detailsOrder(orderId));
     } else {
       if (!order.isPaid) {
         if (!window.paypal) {
-          addPaypalScript();
+          addPayPalScript();
         } else {
           setSdkReady(true);
         }
       }
     }
-  }, [dispatch, order, orderId, setSdkReady, successPay]);
+  }, [dispatch, order, orderId, sdkReady, successPay, successDeliver]);
 
   const successPaymentHandler = (paymentResult) => {
     dispatch(payOrder(order, paymentResult));
   };
+  const deliverHandler = () => {
+    dispatch(deliverOrder(order._id));
+  };
 
   return loading ? (
-    <LoadingBox />
+    <LoadingBox></LoadingBox>
   ) : error ? (
     <MessageBox variant='danger'>{error}</MessageBox>
   ) : (
@@ -163,19 +183,35 @@ export default function OrderScreen(props) {
               {!order.isPaid && (
                 <li>
                   {!sdkReady ? (
-                    <LoadingBox />
+                    <LoadingBox></LoadingBox>
                   ) : (
                     <>
                       {errorPay && (
                         <MessageBox variant='danger'>{errorPay}</MessageBox>
                       )}
-                      {loadingPay && <LoadingBox />}
+                      {loadingPay && <LoadingBox></LoadingBox>}
+
                       <PayPalButton
                         amount={order.totalPrice}
                         onSuccess={successPaymentHandler}
                       ></PayPalButton>
                     </>
                   )}
+                </li>
+              )}
+              {userInfo.isAdmin && order.isPaid && !order.isDelivered && (
+                <li>
+                  {loadingDeliver && <LoadingBox></LoadingBox>}
+                  {errorDeliver && (
+                    <MessageBox variant='danger'>{errorDeliver}</MessageBox>
+                  )}
+                  <button
+                    type='button'
+                    className='primary block'
+                    onClick={deliverHandler}
+                  >
+                    Deliver Order
+                  </button>
                 </li>
               )}
             </ul>
