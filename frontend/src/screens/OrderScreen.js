@@ -26,6 +26,7 @@ export default function OrderScreen(props) {
     success: successPay,
   } = orderPay;
   const orderDeliver = useSelector((state) => state.orderDeliver);
+
   const {
     loading: loadingDeliver,
     error: errorDeliver,
@@ -68,10 +69,6 @@ export default function OrderScreen(props) {
   const successPaymentHandler = (paymentResult) => {
     dispatch(payOrder(order, paymentResult));
   };
-  const deliverHandler = () => {
-    dispatch(deliverOrder(order._id));
-  };
-
   const deliverHandler = () => {
     dispatch(deliverOrder(order._id));
   };
