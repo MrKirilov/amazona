@@ -115,15 +115,8 @@ export const listOrders = () => async (dispatch, getState) => {
     userSignin: { userInfo },
   } = getState();
   try {
-<<<<<<< HEAD
-    const { data } = await Axios.get(`/api/orders`, {
-      headers: {
-        Authorization: `Bearer ${userInfo.token}`,
-      },
-=======
     const { data } = await Axios.get('/api/orders', {
       headers: { Authorization: `Bearer ${userInfo.token}` },
->>>>>>> 09b9cf482b119e4b53bb09c9332bdda97987bda2
     });
     console.log(data);
     dispatch({ type: ORDER_LIST_SUCCESS, payload: data });
@@ -140,18 +133,6 @@ export const deleteOrder = (orderId) => async (dispatch, getState) => {
   const {
     userSignin: { userInfo },
   } = getState();
-<<<<<<< HEAD
-  const { data } = await Axios.delete(`/api/orders/${orderId}`, {
-    headers: {
-      Authorization: `Bearer ${userInfo.token}`,
-    },
-  });
-  const message =
-    error.response && error.response.data.message
-      ? error.response.data.message
-      : error.message;
-  dispatch({ type: ORDER_DELETE_FAIL, payload: message });
-=======
   try {
     const { data } = Axios.delete(`/api/orders/${orderId}`, {
       headers: { Authorization: `Bearer ${userInfo.token}` },
@@ -164,7 +145,6 @@ export const deleteOrder = (orderId) => async (dispatch, getState) => {
         : error.message;
     dispatch({ type: ORDER_DELETE_FAIL, payload: message });
   }
->>>>>>> 09b9cf482b119e4b53bb09c9332bdda97987bda2
 };
 
 export const deliverOrder = (orderId) => async (dispatch, getState) => {
