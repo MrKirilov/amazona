@@ -14,7 +14,6 @@ import {
 export default function OrderScreen(props) {
   const orderId = props.match.params.id;
   const [sdkReady, setSdkReady] = useState(false);
-
   const orderDetails = useSelector((state) => state.orderDetails);
   const { order, loading, error } = orderDetails;
   const userSignin = useSelector((state) => state.userSignin);
@@ -26,7 +25,6 @@ export default function OrderScreen(props) {
     error: errorPay,
     success: successPay,
   } = orderPay;
-
   const orderDeliver = useSelector((state) => state.orderDeliver);
   const {
     loading: loadingDeliver,
@@ -36,13 +34,15 @@ export default function OrderScreen(props) {
 
   const dispatch = useDispatch();
   useEffect(() => {
-    const addPaypalScript = async () => {
+    const addPayPalScript = async () => {
       const { data } = await Axios.get('/api/config/paypal');
       const script = document.createElement('script');
       script.type = 'text/javascript';
       script.src = `https://www.paypal.com/sdk/js?client-id=${data}`;
-      script.async = 'true';
-      script.onload = () => setSdkReady(true);
+      script.async = true;
+      script.onload = () => {
+        setSdkReady(true);
+      };
       document.body.appendChild(script);
     };
     if (
@@ -57,7 +57,7 @@ export default function OrderScreen(props) {
     } else {
       if (!order.isPaid) {
         if (!window.paypal) {
-          addPaypalScript();
+          addPayPalScript();
         } else {
           setSdkReady(true);
         }
@@ -68,13 +68,16 @@ export default function OrderScreen(props) {
   const successPaymentHandler = (paymentResult) => {
     dispatch(payOrder(order, paymentResult));
   };
+  const deliverHandler = () => {
+    dispatch(deliverOrder(order._id));
+  };
 
   const deliverHandler = () => {
     dispatch(deliverOrder(order._id));
   };
 
   return loading ? (
-    <LoadingBox />
+    <LoadingBox></LoadingBox>
   ) : error ? (
     <MessageBox variant='danger'>{error}</MessageBox>
   ) : (
@@ -185,13 +188,14 @@ export default function OrderScreen(props) {
               {!order.isPaid && (
                 <li>
                   {!sdkReady ? (
-                    <LoadingBox />
+                    <LoadingBox></LoadingBox>
                   ) : (
                     <>
                       {errorPay && (
                         <MessageBox variant='danger'>{errorPay}</MessageBox>
                       )}
-                      {loadingPay && <LoadingBox />}
+                      {loadingPay && <LoadingBox></LoadingBox>}
+
                       <PayPalButton
                         amount={order.totalPrice}
                         onSuccess={successPaymentHandler}
@@ -202,6 +206,10 @@ export default function OrderScreen(props) {
               )}
               {userInfo.isAdmin && order.isPaid && !order.isDelivered && (
                 <li>
+                  {loadingDeliver && <LoadingBox></LoadingBox>}
+                  {errorDeliver && (
+                    <MessageBox variant='danger'>{errorDeliver}</MessageBox>
+                  )}
                   <button
                     type='button'
                     className='primary block'

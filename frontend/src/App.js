@@ -40,11 +40,7 @@ function App() {
             </Link>
           </div>
           <div>
-            <Route
-              render={({ history }) => (
-                <SearchBox history={history}></SearchBox>
-              )}
-            ></Route>
+            <Route render={({ history }) => <SearchBox history={history} />} />
           </div>
           <div>
             <Link to='/cart'>
@@ -109,11 +105,10 @@ function App() {
           <Route path='/placeorder' component={PlaceOrderScreen} />
           <Route path='/order/:id' component={OrderScreen} />
           <Route path='/orderhistory' component={OrderHistoryScreen} />
+          <Route path='/search/name/:name?' component={SearchScreen} exact />
           <PrivateRoute path='/profile' component={ProfileScreen} />
           <AdminRoute path='/productlist' component={ProductListScreen} />
           <AdminRoute path='/orderlist' component={OrderListScreen} />
-          <Route path='/search/name/:name?' component={SearchScreen} exact />
-
           <Route path='/' component={HomeScreen} exact />
         </main>
         <footer className='row center'>All right reserved</footer>
