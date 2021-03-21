@@ -1,10 +1,9 @@
-import express, { response } from 'express';
+import express from 'express';
 import expressAsyncHandler from 'express-async-handler';
 import Order from '../models/orderModel.js';
 import { isAdmin, isAuth } from '../utils.js';
 
 const orderRouter = express.Router();
-
 orderRouter.get(
   '/',
   isAuth,
@@ -14,7 +13,6 @@ orderRouter.get(
     res.send(orders);
   })
 );
-
 orderRouter.get(
   '/mine',
   isAuth,
@@ -102,11 +100,19 @@ orderRouter.delete(
 orderRouter.put(
   '/:id/deliver',
   isAuth,
+<<<<<<< HEAD
+=======
+  isAdmin,
+>>>>>>> 09b9cf482b119e4b53bb09c9332bdda97987bda2
   expressAsyncHandler(async (req, res) => {
     const order = await Order.findById(req.params.id);
     if (order) {
       order.isDelivered = true;
       order.deliveredAt = Date.now();
+<<<<<<< HEAD
+=======
+
+>>>>>>> 09b9cf482b119e4b53bb09c9332bdda97987bda2
       const updatedOrder = await order.save();
       res.send({ message: 'Order Delivered', order: updatedOrder });
     } else {

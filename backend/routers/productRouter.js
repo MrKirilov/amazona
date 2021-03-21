@@ -2,16 +2,18 @@ import express from 'express';
 import expressAsyncHandler from 'express-async-handler';
 import data from '../data.js';
 import Product from '../models/productModel.js';
+<<<<<<< HEAD
 import { isAuth, isAdmin } from '../utils.js';
+=======
+import { isAdmin, isAuth } from '../utils.js';
+>>>>>>> 09b9cf482b119e4b53bb09c9332bdda97987bda2
 
 const productRouter = express.Router();
 
 productRouter.get(
   '/',
   expressAsyncHandler(async (req, res) => {
-    const name = req.query.name || '';
-    const nameFilter = name ? { name: { $regex: name, $options: 'i' } } : {};
-    const products = await Product.find({ ...nameFilter });
+    const products = await Product.find({});
     res.send(products);
   })
 );
@@ -43,7 +45,11 @@ productRouter.post(
   isAdmin,
   expressAsyncHandler(async (req, res) => {
     const product = new Product({
+<<<<<<< HEAD
       name: 'sample name' + Date.now(),
+=======
+      name: 'sample name ' + Date.now(),
+>>>>>>> 09b9cf482b119e4b53bb09c9332bdda97987bda2
       image: '/images/p1.jpg',
       price: 0,
       category: 'sample category',
@@ -54,10 +60,13 @@ productRouter.post(
       description: 'sample description',
     });
     const createdProduct = await product.save();
+<<<<<<< HEAD
     res.send({ mesage: 'Product Created', product: createdProduct });
+=======
+    res.send({ message: 'Product Created', product: createdProduct });
+>>>>>>> 09b9cf482b119e4b53bb09c9332bdda97987bda2
   })
 );
-
 productRouter.put(
   '/:id',
   isAuth,
@@ -70,12 +79,16 @@ productRouter.put(
       product.price = req.body.price;
       product.image = req.body.image;
       product.category = req.body.category;
+      product.brand = req.body.brand;
       product.countInStock = req.body.countInStock;
       product.description = req.body.description;
-
       const updatedProduct = await product.save();
+<<<<<<< HEAD
 
       res.send({ message: 'product Updated', product: updatedProduct });
+=======
+      res.send({ message: 'Product Updated', product: updatedProduct });
+>>>>>>> 09b9cf482b119e4b53bb09c9332bdda97987bda2
     } else {
       res.status(404).send({ message: 'Product Not Found' });
     }

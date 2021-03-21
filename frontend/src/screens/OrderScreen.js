@@ -8,7 +8,7 @@ import LoadingBox from '../components/LoadingBox';
 import MessageBox from '../components/MessageBox';
 import {
   ORDER_DELIVER_RESET,
-  ORDER_PAYMENT_RESET,
+  ORDER_PAY_RESET,
 } from '../constants/orderConstants';
 
 export default function OrderScreen(props) {
@@ -30,8 +30,7 @@ export default function OrderScreen(props) {
     loading: loadingDeliver,
     error: errorDeliver,
     success: successDeliver,
-  } = orderPay;
-
+  } = orderDeliver;
   const dispatch = useDispatch();
   useEffect(() => {
     const addPayPalScript = async () => {
@@ -51,7 +50,7 @@ export default function OrderScreen(props) {
       successDeliver ||
       (order && order._id !== orderId)
     ) {
-      dispatch({ type: ORDER_PAYMENT_RESET });
+      dispatch({ type: ORDER_PAY_RESET });
       dispatch({ type: ORDER_DELIVER_RESET });
       dispatch(detailsOrder(orderId));
     } else {
@@ -63,7 +62,7 @@ export default function OrderScreen(props) {
         }
       }
     }
-  }, [dispatch, order, orderId, setSdkReady, successPay, successDeliver]);
+  }, [dispatch, order, orderId, sdkReady, successPay, successDeliver]);
 
   const successPaymentHandler = (paymentResult) => {
     dispatch(payOrder(order, paymentResult));
@@ -72,22 +71,18 @@ export default function OrderScreen(props) {
     dispatch(deliverOrder(order._id));
   };
 
-  const deliverHandler = () => {
-    dispatch(deliverOrder(order._id));
-  };
-
   return loading ? (
     <LoadingBox></LoadingBox>
   ) : error ? (
-    <MessageBox variant='danger'>{error}</MessageBox>
+    <MessageBox variant="danger">{error}</MessageBox>
   ) : (
     <div>
       <h1>Order {order._id}</h1>
-      <div className='row top'>
-        <div className='col-2'>
+      <div className="row top">
+        <div className="col-2">
           <ul>
             <li>
-              <div className='card card-body'>
+              <div className="card card-body">
                 <h2>Shipping</h2>
                 <p>
                   <strong>Name:</strong> {order.shippingAddress.fullName} <br />
@@ -97,44 +92,44 @@ export default function OrderScreen(props) {
                   {order.shippingAddress.country}
                 </p>
                 {order.isDelivered ? (
-                  <MessageBox variant='success'>
+                  <MessageBox variant="success">
                     Delivered at {order.deliveredAt}
                   </MessageBox>
                 ) : (
-                  <MessageBox variant='danger'>Not Delivered</MessageBox>
+                  <MessageBox variant="danger">Not Delivered</MessageBox>
                 )}
               </div>
             </li>
             <li>
-              <div className='card card-body'>
+              <div className="card card-body">
                 <h2>Payment</h2>
                 <p>
                   <strong>Method:</strong> {order.paymentMethod}
                 </p>
                 {order.isPaid ? (
-                  <MessageBox variant='success'>
+                  <MessageBox variant="success">
                     Paid at {order.paidAt}
                   </MessageBox>
                 ) : (
-                  <MessageBox variant='danger'>Not Paid</MessageBox>
+                  <MessageBox variant="danger">Not Paid</MessageBox>
                 )}
               </div>
             </li>
             <li>
-              <div className='card card-body'>
+              <div className="card card-body">
                 <h2>Order Items</h2>
                 <ul>
                   {order.orderItems.map((item) => (
                     <li key={item.product}>
-                      <div className='row'>
+                      <div className="row">
                         <div>
                           <img
                             src={item.image}
                             alt={item.name}
-                            className='small'
+                            className="small"
                           ></img>
                         </div>
-                        <div className='min-30'>
+                        <div className="min-30">
                           <Link to={`/product/${item.product}`}>
                             {item.name}
                           </Link>
@@ -151,32 +146,32 @@ export default function OrderScreen(props) {
             </li>
           </ul>
         </div>
-        <div className='col-1'>
-          <div className='card card-body'>
+        <div className="col-1">
+          <div className="card card-body">
             <ul>
               <li>
                 <h2>Order Summary</h2>
               </li>
               <li>
-                <div className='row'>
+                <div className="row">
                   <div>Items</div>
                   <div>${order.itemsPrice.toFixed(2)}</div>
                 </div>
               </li>
               <li>
-                <div className='row'>
+                <div className="row">
                   <div>Shipping</div>
                   <div>${order.shippingPrice.toFixed(2)}</div>
                 </div>
               </li>
               <li>
-                <div className='row'>
+                <div className="row">
                   <div>Tax</div>
                   <div>${order.taxPrice.toFixed(2)}</div>
                 </div>
               </li>
               <li>
-                <div className='row'>
+                <div className="row">
                   <div>
                     <strong> Order Total</strong>
                   </div>
@@ -192,7 +187,7 @@ export default function OrderScreen(props) {
                   ) : (
                     <>
                       {errorPay && (
-                        <MessageBox variant='danger'>{errorPay}</MessageBox>
+                        <MessageBox variant="danger">{errorPay}</MessageBox>
                       )}
                       {loadingPay && <LoadingBox></LoadingBox>}
 
@@ -208,11 +203,11 @@ export default function OrderScreen(props) {
                 <li>
                   {loadingDeliver && <LoadingBox></LoadingBox>}
                   {errorDeliver && (
-                    <MessageBox variant='danger'>{errorDeliver}</MessageBox>
+                    <MessageBox variant="danger">{errorDeliver}</MessageBox>
                   )}
                   <button
-                    type='button'
-                    className='primary block'
+                    type="button"
+                    className="primary block"
                     onClick={deliverHandler}
                   >
                     Deliver Order

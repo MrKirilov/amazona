@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  listProducts,
   createProduct,
   deleteProduct,
+  listProducts,
 } from '../actions/productActions';
 import LoadingBox from '../components/LoadingBox';
 import MessageBox from '../components/MessageBox';
@@ -41,37 +41,36 @@ export default function ProductListScreen(props) {
       dispatch({ type: PRODUCT_DELETE_RESET });
     }
     dispatch(listProducts());
-  }, [dispatch, createdProduct, props.history, successCreate, successDelete]);
+  }, [createdProduct, dispatch, props.history, successCreate, successDelete]);
 
   const deleteHandler = (product) => {
-    if (window.confirm('Are you sure you want to delete this item?')) {
+    if (window.confirm('Are you sure to delete?')) {
       dispatch(deleteProduct(product._id));
     }
   };
-
   const createHandler = () => {
     dispatch(createProduct());
   };
-
   return (
     <div>
-      <div className='row'>
+      <div className="row">
         <h1>Products</h1>
-        <button type='button' className='primary' onClick={createHandler}>
+        <button type="button" className="primary" onClick={createHandler}>
           Create Product
         </button>
       </div>
-      {loadingDelete && <LoadingBox />}
-      {errorDelete && <MessageBox variant='danger'>{errorDelete}</MessageBox>}
 
-      {loadingCreate && <LoadingBox />}
-      {errorCreate && <MessageBox variant='danger'>{errorCreate}</MessageBox>}
+      {loadingDelete && <LoadingBox></LoadingBox>}
+      {errorDelete && <MessageBox variant="danger">{errorDelete}</MessageBox>}
+
+      {loadingCreate && <LoadingBox></LoadingBox>}
+      {errorCreate && <MessageBox variant="danger">{errorCreate}</MessageBox>}
       {loading ? (
-        <LoadingBox />
+        <LoadingBox></LoadingBox>
       ) : error ? (
-        <MessageBox variant='danger'>{error}</MessageBox>
+        <MessageBox variant="danger">{error}</MessageBox>
       ) : (
-        <table className='table'>
+        <table className="table">
           <thead>
             <tr>
               <th>ID</th>
@@ -92,8 +91,8 @@ export default function ProductListScreen(props) {
                 <td>{product.brand}</td>
                 <td>
                   <button
-                    type='button'
-                    className='small'
+                    type="button"
+                    className="small"
                     onClick={() =>
                       props.history.push(`/product/${product._id}/edit`)
                     }
@@ -101,8 +100,8 @@ export default function ProductListScreen(props) {
                     Edit
                   </button>
                   <button
-                    type='button'
-                    className='small'
+                    type="button"
+                    className="small"
                     onClick={() => deleteHandler(product)}
                   >
                     Delete

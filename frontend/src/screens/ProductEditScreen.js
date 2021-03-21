@@ -1,6 +1,6 @@
-import Axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import Axios from 'axios';
 import { detailsProduct, updateProduct } from '../actions/productActions';
 import LoadingBox from '../components/LoadingBox';
 import MessageBox from '../components/MessageBox';
@@ -27,13 +27,12 @@ export default function ProductEditScreen(props) {
   } = productUpdate;
 
   const dispatch = useDispatch();
-
   useEffect(() => {
     if (successUpdate) {
-      dispatch({ type: PRODUCT_UPDATE_RESET });
       props.history.push('/productlist');
     }
     if (!product || product._id !== productId || successUpdate) {
+      dispatch({ type: PRODUCT_UPDATE_RESET });
       dispatch(detailsProduct(productId));
     } else {
       setName(product.name);
@@ -45,9 +44,9 @@ export default function ProductEditScreen(props) {
       setDescription(product.description);
     }
   }, [product, dispatch, productId, successUpdate, props.history]);
-
   const submitHandler = (e) => {
     e.preventDefault();
+    // TODO: dispatch update product
     dispatch(
       updateProduct({
         _id: productId,
@@ -61,13 +60,11 @@ export default function ProductEditScreen(props) {
       })
     );
   };
-
   const [loadingUpload, setLoadingUpload] = useState(false);
   const [errorUpload, setErrorUpload] = useState('');
 
   const userSignin = useSelector((state) => state.userSignin);
   const { userInfo } = userSignin;
-
   const uploadFileHandler = async (e) => {
     const file = e.target.files[0];
     const bodyFormData = new FormData();
@@ -76,7 +73,7 @@ export default function ProductEditScreen(props) {
     try {
       const { data } = await Axios.post('/api/uploads', bodyFormData, {
         headers: {
-          'Content-Type': 'multipart/foem-data',
+          'Content-Type': 'multipart/form-data',
           Authorization: `Bearer ${userInfo.token}`,
         },
       });
@@ -90,108 +87,107 @@ export default function ProductEditScreen(props) {
 
   return (
     <div>
-      <form className='form' onSubmit={submitHandler}>
+      <form className="form" onSubmit={submitHandler}>
         <div>
           <h1>Edit Product {productId}</h1>
         </div>
-        {loadingUpdate && <LoadingBox />}
-        {errorUpdate && <MessageBox variant='danger'>{errorUpdate}</MessageBox>}
+        {loadingUpdate && <LoadingBox></LoadingBox>}
+        {errorUpdate && <MessageBox variant="danger">{errorUpdate}</MessageBox>}
         {loading ? (
-          <LoadingBox />
+          <LoadingBox></LoadingBox>
         ) : error ? (
-          <MessageBox variant='danger'>{error}</MessageBox>
+          <MessageBox variant="danger">{error}</MessageBox>
         ) : (
           <>
             <div>
-              <label htmlFor='name'>Name</label>
+              <label htmlFor="name">Name</label>
               <input
-                type='text'
-                id='name'
-                placeholder=' Enter name'
+                id="name"
+                type="text"
+                placeholder="Enter name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-              />
+              ></input>
             </div>
             <div>
-              <label htmlFor='price'>Price</label>
+              <label htmlFor="price">Price</label>
               <input
-                type='text'
-                id='price'
-                placeholder='Enter price'
+                id="price"
+                type="text"
+                placeholder="Enter price"
                 value={price}
                 onChange={(e) => setPrice(e.target.value)}
-              />
+              ></input>
             </div>
             <div>
-              <label htmlFor='image'>Image</label>
+              <label htmlFor="image">Image</label>
               <input
-                type='text'
-                id='image'
-                placeholder='Enter image'
+                id="image"
+                type="text"
+                placeholder="Enter image"
                 value={image}
                 onChange={(e) => setImage(e.target.value)}
-              />
+              ></input>
             </div>
             <div>
-              <label htmlFor='imageFile'>Image File</label>
+              <label htmlFor="imageFile">Image File</label>
               <input
-                type='file'
-                id='imageFile'
-                label='Choose Image'
+                type="file"
+                id="imageFile"
+                label="Choose Image"
                 onChange={uploadFileHandler}
-              />
+              ></input>
+              {loadingUpload && <LoadingBox></LoadingBox>}
+              {errorUpload && (
+                <MessageBox variant="danger">{errorUpload}</MessageBox>
+              )}
             </div>
-            {loadingUpload && <LoadingBox />}
-            {errorUpload && (
-              <MessageBox variant='danger'>{errorUpload}</MessageBox>
-            )}
             <div>
-              <label htmlFor='category'>Category</label>
+              <label htmlFor="category">Category</label>
               <input
-                type='text'
-                id='category'
-                placeholder='Enter category'
+                id="category"
+                type="text"
+                placeholder="Enter category"
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-              />
+              ></input>
             </div>
             <div>
-              <label htmlFor='brand'>Brand</label>
+              <label htmlFor="brand">Brand</label>
               <input
-                type='text'
-                id='brand'
-                placeholder=' Enter brand'
+                id="brand"
+                type="text"
+                placeholder="Enter brand"
                 value={brand}
                 onChange={(e) => setBrand(e.target.value)}
-              />
+              ></input>
             </div>
             <div>
-              <label htmlFor='countInStock'>Count In Stock</label>
+              <label htmlFor="countInStock">Count In Stock</label>
               <input
-                type='text'
-                id='countInStock'
-                placeholder=' Enter count in stock'
+                id="countInStock"
+                type="text"
+                placeholder="Enter countInStock"
                 value={countInStock}
                 onChange={(e) => setCountInStock(e.target.value)}
-              />
+              ></input>
             </div>
             <div>
-              <label htmlFor='description'>Description</label>
+              <label htmlFor="description">Description</label>
               <textarea
-                type='text'
-                rows='3'
-                id='description'
-                placeholder=' Enter description'
+                id="description"
+                rows="3"
+                type="text"
+                placeholder="Enter description"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-              />
+              ></textarea>
             </div>
             <div>
-              <label>
-                <button className='primary' type='submit'>
-                  Update
-                </button>
-              </label>
+              <label></label>
+              <button className="primary" type="submit">
+                Update
+              </button>
             </div>
           </>
         )}
